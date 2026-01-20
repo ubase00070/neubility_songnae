@@ -43,13 +43,19 @@
 
         button.unit-btn:disabled:not(.active) { opacity: 0.3; cursor: not-allowed; }
 
-        .time-07 { border-bottom: 4px solid #fff3bf !important; } .time-08 { border-bottom: 4px solid #ffe066 !important; }
-        .time-09 { border-bottom: 4px solid #b2f2bb !important; } .time-11 { border-bottom: 4px solid #a5d8ff !important; }
-        .time-13 { border-bottom: 4px solid #d0ebff !important; } .time-14 { border-bottom: 4px solid #e5dbff !important; }
-        .time-15 { border-bottom: 4px solid #ffc9c9 !important; } .time-18 { border-bottom: 4px solid #fcc2d7 !important; }
-        .time-20 { border-bottom: 4px solid #ffdeeb !important; } .time-22 { border-bottom: 4px solid #adb5bd !important; }
-        .time-23 { border-bottom: 4px solid #bac8ff !important; }
-        .time-none { border-bottom: 4px solid #e9ecef !important; }
+/* 시간대별 그라데이션 컬러 구성 */
+        .time-07 { border-bottom: 4px solid #fff3bf !important; } /* 이른 아침: 연노랑 */
+        .time-08 { border-bottom: 4px solid #ffe066 !important; } /* 아침: 노랑 */
+        .time-09 { border-bottom: 4px solid #fab005 !important; } /* 오전: 진한 노랑/오렌지 */
+        .time-11 { border-bottom: 4px solid #a9e34b !important; } /* 낮: 연두 */
+        .time-13 { border-bottom: 4px solid #69db7c !important; } /* 오후 시작: 녹색 */
+        .time-14 { border-bottom: 4px solid #38d9a9 !important; } /* 오후: 민트 */
+        .time-15 { border-bottom: 4px solid #3bc9db !important; } /* 늦은 오후: 하늘 */
+        .time-18 { border-bottom: 4px solid #4dabf7 !important; } /* 저녁: 파랑 */
+        .time-20 { border-bottom: 4px solid #748ffc !important; } /* 밤: 남색 */
+        .time-22 { border-bottom: 4px solid #91a7ff !important; } /* 야간: 연보라 */
+        .time-23 { border-bottom: 4px solid #be4bdb !important; } /* 심야: 보라 */
+        .time-none { border-bottom: 4px solid #dee2e6 !important; } /* 설정없음: 연회색 */
 
         .right-panel { position: sticky; top: 15px; height: fit-content; background: #fff; padding: 15px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border: 1px solid #dee2e6; }
         #preview { background: #444b52; color: #ffffff; border-radius: 8px; padding: 18px; white-space: pre-wrap; font-family: 'Consolas', monospace; font-size: 15px; line-height: 1.7; margin-bottom: 12px; min-height: 320px; box-shadow: inset 0 2px 8px rgba(0,0,0,0.15); }
@@ -301,6 +307,7 @@ ${accountText}`;
 </script>
 </body>
 </html>
+
 
 
 
