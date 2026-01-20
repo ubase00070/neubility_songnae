@@ -58,7 +58,7 @@
         .time-none { border-bottom: 4px solid #dee2e6 !important; } /* 설정없음: 연회색 */
 
         .right-panel { position: sticky; top: 15px; height: fit-content; background: #fff; padding: 15px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border: 1px solid #dee2e6; }
-        #preview { background: #444b52; color: #ffffff; border-radius: 8px; padding: 18px; white-space: pre-wrap; font-family: 'Consolas', monospace; font-size: 15px; line-height: 1.7; margin-bottom: 12px; min-height: 320px; box-shadow: inset 0 2px 8px rgba(0,0,0,0.15); }
+        #preview { background: #ffffff; color: #212529; border: 1px solid #dee2e6; border-radius: 8px; padding: 18px; white-space: pre-wrap; font-family: 'Consolas', monospace; font-size: 15px; line-height: 1.7; margin-bottom: 12px; min-height: 320px; box-shadow: inset 0 2px 8px rgba(0,0,0,0.15); }
         .copy-btn { width: 100%; padding: 14px; background: #37b24d; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; transition: all 0.2s; }
         .copy-btn:hover { background: #2f9e44; }
     </style>
@@ -278,7 +278,7 @@
             }
         }
 
-        let accountText = selection.account.length === 0 ? "• 멀티 계정 미사용 중" : `• 멀티 계정 ${selection.account.join(", ")} 사용 중`;
+        let accountText = selection.account.length === 0 ? "• 멀티 계정 미사용" : `• 멀티 계정 ${selection.account.join(", ")} 사용 중`;
         
         // [수정 포인트] 출차 정보에 불렛 기호 추가 및 레이아웃 정리
         const shiftText = `• 교대: ${formatUnitsWithGrouping(selection.shift)}`;
@@ -307,6 +307,7 @@ ${accountText}`;
 </script>
 </body>
 </html>
+
 
 
 
