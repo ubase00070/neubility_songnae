@@ -113,7 +113,7 @@
         <button class="copy-btn" id="copyBtn" onclick="copyToClipboard()">텍스트 복사하기</button>
     </div>
 </div>
-
+    
 <script>
     const personnelData = [
         { name: "차현모", time: "", class: "time-none" }, { name: "김지훈", time: "(0700-1600)(U)", class: "time-07" }, { name: "오정훈", time: "(0700-1600)(U)", class: "time-07" }, { name: "강상윤", time: "(0700-1600)(U)", class: "time-07" }, { name: "박계원", time: "(0800-1700)(U)", class: "time-08" }, { name: "박효선", time: "(0800-1700)(U)", class: "time-08" }, { name: "신지섭", time: "(0900-1800)(U)", class: "time-09" }, { name: "안혜림", time: "(0900-1800)(U)", class: "time-09" }, { name: "김경환", time: "(0900-1800)(U)", class: "time-09" }, { name: "최윤혁", time: "(0900-1800)(U)", class: "time-09" }, { name: "이길범", time: "(0900-1800)(U)", class: "time-09" }, { name: "박은선", time: "(1100-2000)(U)", class: "time-11" }, { name: "송주현", time: "(1100-2000)(U)", class: "time-11" }, { name: "장재원", time: "(1100-2000)(U)", class: "time-11" }, { name: "이환", time: "(1100-2000)(U)", class: "time-11" }, { name: "박혜영", time: "(1100-2000)(U)", class: "time-11" }, { name: "김동진", time: "(1100-2000)(U)", class: "time-11" }, { name: "신은정", time: "(1300-2200)(U)", class: "time-13" }, { name: "신현철", time: "(1300-2200)(U)", class: "time-13" }, { name: "이도연", time: "(1300-2200)(U)", class: "time-13" }, { name: "박효빈", time: "(1400-2300)(U)", class: "time-14" }, { name: "김가은", time: "(1500-2400)(U)", class: "time-15" }, { name: "서형민", time: "(1500-2400)(U)", class: "time-15" }, { name: "최성환", time: "(1500-2400)(U)", class: "time-15" }, { name: "박수연", time: "(1800-0300)(U)", class: "time-18" }, { name: "이규순", time: "(1800-0300)(U)", class: "time-18" }, { name: "강철환", time: "(1800-0300)(U)", class: "time-18" }, { name: "최선호", time: "(2000-0500)(U)", class: "time-20" }, { name: "최정기", time: "(2000-0500)(U)", class: "time-20" }, { name: "고상연", time: "(2200-0700)(U)", class: "time-22" }, { name: "임다연", time: "(2200-0700)(U)", class: "time-22" }, { name: "임아연", time: "(2200-0700)(U)", class: "time-22" }, { name: "안대관", time: "(2330-0830)(U)", class: "time-23" }
@@ -300,13 +300,16 @@ ${accountText}`;
         textarea.value = text; document.body.appendChild(textarea);
         textarea.select(); document.execCommand('copy'); document.body.removeChild(textarea);
         const btn = document.getElementById('copyBtn');
-        const old = btn.innerText; btn.innerText = "복사 완료!"; btn.style.backgroundColor = "#4dabf7";
-        setTimeout(() => btn.innerText = old, 800);
-    }
+        const old = btn.innerText; btn.innerText = "복사 완료!"; btn.classList.add('success'); btn.style.backgroundColor = "#4dabf7";
+        setTimeout(() => {
+        btn.innerText = oldText;
+        btn.classList.remove('success'); // 'success' 클래스 제거 (초록색 복구)
+    }, 800);
     init();
 </script>
 </body>
 </html>
+
 
 
 
