@@ -273,11 +273,16 @@
         }
 
         let accountText = selection.account.length === 0 ? "• 멀티 계정 미사용 중" : `• 멀티 계정 ${selection.account.join(", ")} 사용 중`;
+        
+        // [수정 포인트] 출차 정보에 불렛 기호 추가 및 레이아웃 정리
+        const shiftText = `• 교대: ${formatUnitsWithGrouping(selection.shift)}`;
+        const planText = `• 예정: ${formatUnitsWithGrouping(selection.plan)}`;
+        const outText = selection.out.length > 0 ? `\n• 출차: (${hour}:50) ${formatUnitsWithGrouping(selection.out)}` : '';
 
         const result = `[${hour}]시 다중 모니터링 교대
 ${p1} > ${p2}
-• 교대: ${formatUnitsWithGrouping(selection.shift)}
-• 예정: ${formatUnitsWithGrouping(selection.plan)} ${selection.out.length > 0 ? '\n/// ('+hour+':50) ' + formatUnitsWithGrouping(selection.out) + ' 출차' : ''}
+${shiftText}
+${planText}${outText}
 
 ${accountText}`;
         document.getElementById('preview').innerText = result;
@@ -296,4 +301,5 @@ ${accountText}`;
 </script>
 </body>
 </html>
+
 
