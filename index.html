@@ -71,6 +71,48 @@
     background-color: #4dabf7 !important;
 }
         .copy-btn:hover { background: #2f9e44; }
+
+        /* 개발자 사용설명서 섹션 스타일 */
+.manual-section {
+    margin-top: 15px;
+    padding: 15px;
+    background-color: #f8f9fa; /* 아주 연한 회색 */
+    border: 1px dashed #adb5bd; /* 점선 테두리로 매뉴얼 느낌 강조 */
+    border-radius: 12px;
+}
+
+.manual-title {
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: #495057;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.manual-title::before {
+    content: '📘'; /* 매뉴얼 아이콘 */
+}
+
+.manual-content {
+    font-size: 13px;
+    line-height: 1.6;
+    color: #495057;
+}
+
+.manual-content ul {
+    margin: 0;
+    padding-left: 20px;
+}
+
+.manual-content li {
+    margin-bottom: 6px;
+}
+
+.manual-content strong {
+    color: #228be6; /* 강조 텍스트용 파란색 */
+}
     </style>
 </head>
 <body>
@@ -115,6 +157,17 @@
                 <button class="unit-btn acc-btn" id="acc-02" onclick="toggleAccount('02')">02</button>
             </div>
         </div>
+        <div class="manual-section">
+    <div class="manual-title">개발자의 사용설명서</div>
+    <div class="manual-content">
+        <ul>
+            <li><strong>교대 인원:</strong> 본인 이름을 먼저 입력하면 대기자 선택이 제한됩니다.</li>
+            <li><strong>기체 선택:</strong> 선택한 순서대로 프리뷰에 반영되며, 같은 종류는 자동으로 묶입니다.</li>
+            <li><strong>복사 기능:</strong> 버튼을 누르면 하늘색으로 변하며 클립보드에 저장됩니다.</li>
+            <li>여기에 작가님의 철학이나 추가 규칙을 기록해 보세요.</li>
+        </ul>
+    </div>
+</div>
     </div>
 
     <div class="right-panel">
@@ -338,6 +391,7 @@ function copyToClipboard() {
 </script>
 </body>
 </html>
+
 
 
 
