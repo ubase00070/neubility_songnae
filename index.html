@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="robots" content="noindex, nofollow">
-    <title>Just a Tool v1.2 (Masking Applied)</title>
+    <title>Just a Tool v.1.2 (Floating Notes Added)</title>
     <style>
         body { font-family: 'Malgun Gothic', sans-serif; padding: 15px; background-color: #EFE9D9; color: #333; margin: 0; }
         .main-wrapper { display: grid; gap: 15px; max-width: 1400px; margin: auto; grid-template-areas: "person preview" "units units" "extra extra"; grid-template-columns: 1fr 400px; }
@@ -18,12 +18,20 @@
         button.unit-btn.next-highlight { background-color: #34f84f !important; border-color: #b2f2bb !important; color: #222 !important; font-weight: bold !important; box-shadow: 0 0 8px #d3f9d8; animation: highlight-pulse 2s infinite; }
         button.unit-btn.active { border: 1px solid #222 !important; border-bottom-width: 4px !important; font-weight: bold !important; background-color: #4dabf7 !important; color: white !important; }
         
-        /* 유동적 기체 핑크 하이라이트 스타일 */
         .highlight-pink { background-color: #fff0f6 !important; border-color: #ffdeeb !important; color: #d6336c !important; }
+        .mask-text { filter: blur(3px); transition: filter 0.3s; user-select: all; }
+        .mask-text:hover { filter: blur(0); }
 
-        /* [추가] 근무시간 마스킹 스타일 */
-        .mask-text { filter: blur(2.8px); transition: filter 0.3s; user-select: all; }
-        .mask-text:hover { filter: blur(0); } /* 마우스 올리면 일시적으로 보임 */
+        /* [수정] 특이사항 팝업 스타일: 위치를 absolute로 변경하고 마우스를 따라가게 설정 */
+        #note-popup {
+            position: absolute; 
+            width: 280px; 
+            background: #333; color: #fff; padding: 15px; border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2); font-size: 13px; line-height: 1.5;
+            display: none; z-index: 9999; border-left: 5px solid #ffdeeb;
+            pointer-events: none; /* 팝업이 마우스 클릭을 방해하지 않도록 설정 */
+        }
+        #note-popup b { color: #ffdeeb; display: block; margin-bottom: 5px; }
 
         @keyframes highlight-pulse { 0% { opacity: 1; } 50% { opacity: 0.7; } 100% { opacity: 1; } }
         .time-07 { border-bottom-color: #fff3bf !important; } .time-08 { border-bottom-color: #ffe066 !important; } .time-09 { border-bottom-color: #fab005 !important; } .time-11 { border-bottom-color: #a9e34b !important; } .time-13 { border-bottom-color: #69db7c !important; } .time-14 { border-bottom-color: #38d9a9 !important; } .time-15 { border-bottom-color: #3bc9db !important; } .time-18 { border-bottom-color: #4dabf7 !important; } .time-20 { border-bottom-color: #748ffc !important; } .time-22 { border-bottom-color: #91a7ff !important; } .time-23 { border-bottom-color: #be4bdb !important; } .time-none { border-bottom-color: #dee2e6 !important; }
@@ -36,19 +44,21 @@
 </head>
 <body>
 
+<div id="note-popup"></div>
+
 <div class="main-wrapper">
     <div class="section person-section">
         <div class="section-header">
             <span class="section-title">1. 대상</span>
             <div class="user-save-zone">
                 <span>이름:</span><input type="text" id="my-name-input" oninput="handleNameInput()" placeholder="본인 이름">
-                </div>
+            </div>
         </div>
         <div class="btn-group" id="person-container"></div>
     </div>
 
     <div class="section preview-section">
-        <div class="preview-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: -10px;">
+        <div class="preview-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
             <span class="section-title" style="border-color: #37b24d;">실시간 텍스트 프리뷰</span>
             <button class="copy-btn" id="copyBtn" onclick="copyToClipboard()">복사하기</button>
         </div>
@@ -87,8 +97,9 @@
             <span> • 프리뷰의 마스킹 표시는 복사 시에 정상적으로 출력됩니다.</span><br>
             <span> • 이름 입력 시 자동 저장되고 그룹별 색상을 지정했습니다.</span><br>
             <span> • 동일 사이트는 자동으로 묶이고 특정 요일 휴무를 적용했습니다.</span><br>
-            <span> • 일부는 맨끝에 핑크색으로 하이라이트 표시했습니다.</span><br>
-            <span> • 내부 도구이므로 외부 노출에 주의바랍니다.</span>
+	    <span> • 일부는 맨끝에 핑크색으로 하이라이트 표시했습니다.</span><br>
+	    <span> • 특이사항 기체는 버튼 우하단에서 팝업이 뜹니다.</span><br>
+	    <span> • 내부 도구이므로 외부 노출에 주의바랍니다.</span>
         </div>
     </div>
 </div>
@@ -97,6 +108,16 @@
     const personnelData = [{ name: "차현모", time: "", class: "time-none" }, { name: "김지훈", time: "(0700-1600)(U)", class: "time-07" }, { name: "오정훈", time: "(0700-1600)(U)", class: "time-07" }, { name: "강상윤", time: "(0700-1600)(U)", class: "time-07" }, { name: "박계원", time: "(0800-1700)(U)", class: "time-08" }, { name: "박효선", time: "(0800-1700)(U)", class: "time-08" }, { name: "신지섭", time: "(0900-1800)(U)", class: "time-09" }, { name: "안혜림", time: "(0900-1800)(U)", class: "time-09" }, { name: "김경환", time: "(0900-1800)(U)", class: "time-09" }, { name: "최윤혁", time: "(0900-1800)(U)", class: "time-09" }, { name: "이길범", time: "(0900-1800)(U)", class: "time-09" }, { name: "박은선", time: "(1100-2000)(U)", class: "time-11" }, { name: "송주현", time: "(1100-2000)(U)", class: "time-11" }, { name: "장재원", time: "(1100-2000)(U)", class: "time-11" }, { name: "이환", time: "(1100-2000)(U)", class: "time-11" }, { name: "박혜영", time: "(1100-2000)(U)", class: "time-11" }, { name: "김동진", time: "(1100-2000)(U)", class: "time-11" }, { name: "신은정", time: "(1300-2200)(U)", class: "time-13" }, { name: "신현철", time: "(1300-2200)(U)", class: "time-13" }, { name: "이도연", time: "(1300-2200)(U)", class: "time-13" }, { name: "박효빈", time: "(1400-2300)(U)", class: "time-14" }, { name: "김가은", time: "(1500-2400)(U)", class: "time-15" }, { name: "서형민", time: "(1500-2400)(U)", class: "time-15" }, { name: "최성환", time: "(1500-2400)(U)", class: "time-15" }, { name: "박수연", time: "(1800-0300)(U)", class: "time-18" }, { name: "이규순", time: "(1800-0300)(U)", class: "time-18" }, { name: "강철환", time: "(1800-0300)(U)", class: "time-18" }, { name: "김소연", time: "(2000-0500)(U)", class: "time-20" }, { name: "최선호", time: "(2000-0500)(U)", class: "time-20" }, { name: "최정기", time: "(2000-0500)(U)", class: "time-20" }, { name: "고상연", time: "(2200-0700)(U)", class: "time-22" }, { name: "임다연", time: "(2200-0700)(U)", class: "time-22" }, { name: "임아연", time: "(2200-0700)(U)", class: "time-22" }, { name: "안대관", time: "(2330-0830)(U)", class: "time-23" }];
     const rawUnits = ["용인 고진", "서강대", "경희대 1", "경희대 2", "성남 200", "성남 201", "성남 202", "성남 203", "부산 1", "부산 2", "부산 3", "부산 4", "파주", "리센츠 1", "리센츠 2", "평택 1", "평택 2", "부산 서면", "부천 중동", "인력개발원", "엘스 1", "엘스 2", "송도 국캠", "자체순찰 01", "자체순찰 02", "김포 1", "김포 2", "평택 지제", "두루아이 3", "쉴더스", "신동백", "청담 르엘", "전주천", "아주대 1", "아주대 2", "고양 래미안", "강원대 1", "강원대 2", "DMZ", "부경대", "부산국립과학관"];
     const outUnitsList = ["부산 1", "부산 2", "부산 3", "부산 4", "성남 200", "성남 201", "성남 202", "성남 203", "자체순찰 01", "자체순찰 02", "신동백", "청담 르엘", "전주천", "부산국립과학관"];
+
+    // [특이사항 데이터 저장소]
+    const unitNotes = {
+        "용인 고진": "미니맵 위치 미노출로 순회 생략",
+	"부산 1": "12/31(수) ~ 대체 기체 #167호기로 운영",
+	"리센츠 1": "충전기고장으로 순회생략",
+	"리센츠 2": "단지공사예정/기체 꺼내져있을 경우에만 순회",
+	"김포 2": "후면 파손으로 순회보류",
+	"고양 래미안": "2월까지 순회보류",	
+    };
 
     const timeTable = {
         "07": { plan: ["용인 고진", "서강대", "경희대", "성남 202", "성남 203"], out: ["부산 1", "부산 3"] },
@@ -137,9 +158,7 @@
         const savedName = localStorage.getItem('monitor_my_name');
         if (savedName) document.getElementById('my-name-input').value = savedName;
 
-        // 주석 처리된 요소들을 안전하게 참조하기 위해 체크 로직 추가
-        const testDInput = document.getElementById('test-day-input');
-        const currentDay = (testDInput && testDInput.value !== "") ? parseInt(testDInput.value) : new Date().getDay();
+        const currentDay = new Date().getDay();
 
         renderContainer('person-container', personnelData.map(p => ({name: p.name, type: 'people', class: p.class})));
 
@@ -153,7 +172,7 @@
         const unitsOrderFiltered = filteredUnits.map(u => u.replace("자체순찰", "자체순찰 "));
 
         renderContainer('shift-container', unitsOrderFiltered
-        .filter(name => name !== "부산국립과학관") // 교대 기체 목록에서 제외
+        .filter(name => name !== "부산국립과학관") 
         .map(name => ({name, type: 'shift', class: 'time-none'})));
         
         const planData = [];
@@ -180,10 +199,10 @@
         updatePreview();
     }
 
-    function updateAllForTest() { applyHighlight(); updatePreview(); }
-
     function renderContainer(id, data) {
         const container = document.getElementById(id);
+        const popup = document.getElementById('note-popup');
+
         data.forEach(item => {
             const btn = document.createElement('button');
             let extraClass = item.class || 'time-none';
@@ -195,6 +214,25 @@
             btn.className = `unit-btn ${extraClass}`;
             btn.textContent = item.name;
             btn.dataset.name = item.name; 
+
+            // [수정된 부분] item.type이 'shift'(진행 중)가 아닐 때만 팝업 이벤트를 등록합니다.
+            if (item.type !== 'shift') {
+                btn.onmouseenter = (e) => {
+                    const note = unitNotes[item.name];
+                    if (note) {
+                        popup.innerHTML = `<b>[${item.name} 특이사항]</b>${note}`;
+                        popup.style.display = 'block';
+                        popup.style.left = (e.pageX + 10) + 'px';
+                        popup.style.top = (e.pageY + 10) + 'px';
+                    }
+                };
+                btn.onmousemove = (e) => {
+                    popup.style.left = (e.pageX + 10) + 'px';
+                    popup.style.top = (e.pageY + 10) + 'px';
+                };
+                btn.onmouseleave = () => { popup.style.display = 'none'; };
+            }
+
             btn.onclick = () => {
                 const arr = selection[item.type];
                 const idx = arr.indexOf(item.name);
@@ -213,9 +251,7 @@
     }
 
     function applyHighlight() {
-        const testHInput = document.getElementById('test-time-input');
-        const testH = (testHInput) ? testHInput.value.trim() : "";
-        let baseH = testH !== "" ? parseInt(testH) : new Date().getHours();
+        let baseH = new Date().getHours();
         const nextH = String((baseH + 1) % 24).padStart(2, '0');
         const data = timeTable[nextH];
         
@@ -294,9 +330,7 @@
     }
 
     function updatePreview() {
-        const testHInput = document.getElementById('test-time-input');
-        const testH = (testHInput) ? testHInput.value.trim() : "";
-        let baseH = testH !== "" ? parseInt(testH) : new Date().getHours();
+        let baseH = new Date().getHours();
         const nextH = (baseH + 1) % 24;
         const h = String(nextH).padStart(2, '0');
         const inputName = document.getElementById('my-name-input').value.trim();
@@ -350,7 +384,3 @@
 </script>
 </body>
 </html>
-
-
-
-
