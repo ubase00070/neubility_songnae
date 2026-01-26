@@ -93,7 +93,7 @@
             </div>
         </div> 
         <div class="manual-section" style="margin-top:15px; padding:15px; background-color:#fff; border:1px dashed #e9e4d9; border-radius:12px; font-size:13px; line-height:1.6; color:#495057;">
-            <div style="font-weight:bold; margin-bottom:8px; color:#222;"> 어딘가의 내부 도구 v1.3 (** 260125 기체 출근현황 시트 반영)</div>
+            <div style="font-weight:bold; margin-bottom:8px; color:#222;"> 어딘가의 내부 도구 v1.3 (** 260126 기체 출근현황 시트 반영)</div>
             <span> • 이름 입력 시 자동 저장되고 시간 그룹별 색상을 지정했습니다.</span><br>
             <span> • 동일 사이트는 선택 시 자동으로 묶이며 특정 기체는 휴무일에 표기되지 않습니다.</span><br>
 	        <span> • 기체 특이사항은 예정 버튼 하단에 팝업으로 표시됩니다.</span><br>
@@ -109,9 +109,8 @@
 
     // [특이사항 데이터 저장소]
     const unitNotes = {
-        "용인 고진": "미니맵 위치 미노출로 순회 생략",
 	"부산 1": "12/31(수) ~ 대체 기체 #167호기로 운영",
-	"리센츠 1": "충전기고장으로 순회생략",
+	"리센츠 1": "단지공사예정<br>기체 꺼내져있을 경우에만 순회",
 	"리센츠 2": "단지공사예정<br>기체 꺼내져있을 경우에만 순회",
 	"김포 2": "후면 파손으로 순회보류",
 	"고양 래미안": "2월까지 순회보류",
@@ -401,6 +400,7 @@
 </script>
 </body>
 </html>
+
 
 
 
