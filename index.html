@@ -3,18 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="robots" content="noindex, nofollow">
-    <title>Just a Tool v.1.4</title>
+    <title>Just an Internal Tool</title>
     <style>
         body { font-family: 'Malgun Gothic', sans-serif; padding: 15px; background-color: #EFE9D9; color: #333; margin: 0; }
         /* 그리드 조정: 왼쪽을 살짝 줄여서 프리뷰 공간 확보 */
-        .main-wrapper { display: grid; gap: 15px; max-width: 1400px; margin: auto; grid-template-areas: "person preview" "units units" "extra extra"; grid-template-columns: 0.9fr 1.1fr; }
+        .main-wrapper { display: grid; gap: 15px; max-width: 1400px; margin: auto; grid-template-areas: "person preview" "units units" "extra extra"; grid-template-columns: 0.92fr 1.08fr; }
         .person-section { grid-area: person; } .preview-section { grid-area: preview; } .units-section { grid-area: units; } .extra-section { grid-area: extra; }
         .section { background: #FDFCF0; padding: 15px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.03); border: 1px solid #e9e4d9; height: fit-content; }
         .half-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
         .section-title { font-weight: bold; display: block; color: #495057; border-left: 4px solid #adb5bd; padding-left: 8px; font-size: 0.85rem; }
         
-        button.unit-btn { padding: 5px 9px; border: 1px solid #e9ecef; background: #fff; cursor: pointer; border-radius: 4px; font-size: 12px; color: #444; border-bottom-width: 4px !important; border-bottom-style: solid !important; box-sizing: border-box; transition: background-color 0.1s; transform: none !important; margin: 2px; position: relative; }
+        button.unit-btn { padding: 5px 9px; border: 1px solid #e9ecef; background: #fff; cursor: pointer; border: 1px solid #ced4da; border-radius: 4px; font-size: 12px; font-weight: 500; color: #444; border-bottom-width: 3.5px !important; border-bottom-style: solid !important; box-sizing: border-box; transition: background-color 0.1s; transform: none !important; margin: 2px; position: relative; }
         button.unit-btn:disabled { cursor: not-allowed; opacity: 0.6; }
         .reset-btn { font-size: 11px; padding: 2px 10px; border-radius: 20px; border: 1px solid #ced4da; background: #fff; color: #868e96; cursor: pointer; }
         button.unit-btn.next-highlight { background-color: #34f84f !important; border-color: #b2f2bb !important; color: #222 !important; font-weight: bold !important; box-shadow: 0 0 8px #d3f9d8; animation: highlight-pulse 2s infinite; }
@@ -35,8 +35,8 @@
             white-space: pre-wrap;
             font-family: 'Segoe UI', Slack-Lato, AppleColorEmoji, sans-serif; 
             font-size: 15px;      
-            line-height: 1.5;
-            min-height: 200px;
+            line-height: 1.6;
+            min-height: 180px;
             letter-spacing: -0.2px;
         }
 
@@ -70,10 +70,13 @@
         @keyframes highlight-pulse { 0% { opacity: 1; } 50% { opacity: 0.7; } 100% { opacity: 1; } }
         .time-07 { border-bottom-color: #ffff33 !important; } .time-08 { border-bottom-color: #ffcc66 !important; } .time-09 { border-bottom-color: #ffa468 !important; } .time-11 { border-bottom-color: #99ff99 !important; } .time-13 { border-bottom-color: #5ddf1c !important; } .time-14 { border-bottom-color: #99ffff !important; } .time-15 { border-bottom-color: #3582d4 !important; } .time-18 { border-bottom-color: #3434fc !important; } .time-20 { border-bottom-color: #ffccff !important; } .time-22 { border-bottom-color: #fb68b1 !important; } .time-23 { border-bottom-color: #ca2e62 !important; } .time-none { border-bottom-color: #dee2e6 !important; }
         
-        .copy-btn { padding: 4px 12px; background: #37b24d; color: white; border: none; border-radius: 6px; font-size: 12px; font-weight: bold; cursor: pointer; }
+        .copy-btn { padding: 5px 22px; background: #37b24d; color: white; border: none; border-radius: 6px; font-size: 12px; font-weight: bold; cursor: pointer; }
         .copy-btn.is-active { background-color: #4dabf7 !important; }
         .user-save-zone { font-size: 11px; display: flex; align-items: center; gap: 5px; background: #f1f3f5; padding: 6px 10px; border-radius: 4px; border: 1px solid #dee2e6; }
         .user-save-zone input, .user-save-zone select { border: 1px solid #ced4da; border-radius: 3px; padding: 2px 5px; font-size: 11px; }
+
+        /* 추가된 보조 타이틀 스타일 */
+        .sub-group-title { font-size: 11px; color: #868e96; margin: 3px 0 2px 1px; font-weight: bold; display: flex; align-items: center; gap: 4px; }
     </style>
 </head>
 <body>
@@ -83,17 +86,25 @@
 <div class="main-wrapper">
     <div class="section person-section">
         <div class="section-header">
-            <span class="section-title">1. 교대 대상</span>
+            <span class="section-title">[1] 교대 관제사</span>
             <div class="user-save-zone">
-                <span>이름:</span><input type="text" id="my-name-input" oninput="handleNameInput()" placeholder="본인 이름">
+                <span>성명:</span><input type="text" id="my-name-input" oninput="handleNameInput()" placeholder="입력 시 저장됨">
             </div>
         </div>
-        <div class="btn-group" id="person-container"></div>
+        <hr style="border: 0; border-top: 1px dashed #e9e4d9; margin: 3px 0;">
+        <div class="sub-group-title">☀️ 주간 출근자 (07시 ~ 15시)</div>
+        <hr style="border: 0; border-top: 1px dashed #e9e4d9; margin: 3px 0;">
+        <div class="btn-group" id="person-day-container"></div>
+        
+        <hr style="border: 0; border-top: 1px dashed #e9e4d9; margin: 3px 0;">
+        <div class="sub-group-title">🌙 야간 출근자 (18시 - 23시 반)</div>
+        <hr style="border: 0; border-top: 1px dashed #e9e4d9; margin: 3px 0;">
+        <div class="btn-group" id="person-night-container"></div>
     </div>
 
     <div class="section preview-section">
         <div class="preview-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-            <span class="section-title" style="border-color: #37b24d;">실시간 텍스트 프리뷰</span>
+            <span class="section-title" style="border-color: #37b24d;">Just an Internal Tool v1.4 (260130 Updated)</span>
             <button class="copy-btn" id="copyBtn" onclick="copyToClipboard()">복사하기</button>
         </div>
         <div id="preview"></div>
@@ -102,11 +113,11 @@
     <div class="units-section">
         <div class="half-grid">
             <div class="section">
-                <div class="section-header"><span class="section-title">2. 현재 모니터링 중</span><button class="reset-btn" onclick="resetSection('shift')">전체 해제</button></div>
+                <div class="section-header"><span class="section-title">[2] 모니터링 중인 기체</span><button class="reset-btn" onclick="resetSection('shift')">전체 해제</button></div>
                 <div class="btn-group" id="shift-container"></div>
             </div>
             <div class="section">
-                <div class="section-header"><span class="section-title">3. 예정 (🟢: ${currentH}시 예정)</span><button class="reset-btn" onclick="resetSection('plan')">전체 해제</button></div>
+                <div class="section-header"><span class="section-title">[3] 예정 (🟢: ${currentH}시 예정)</span><button class="reset-btn" onclick="resetSection('plan')">전체 해제</button></div>
                 <div class="btn-group" id="plan-container"></div>
             </div>
         </div>
@@ -115,11 +126,11 @@
     <div class="extra-section">
         <div class="half-grid">
             <div class="section">
-                <div class="section-header"><span class="section-title">4. 출차 예정 (🟢)</span><button class="reset-btn" onclick="resetSection('out')">전체 해제</button></div>
+                <div class="section-header"><span class="section-title">[4] 출차 예정 (🟢)</span><button class="reset-btn" onclick="resetSection('out')">전체 해제</button></div>
                 <div class="btn-group" id="out-container"></div>
             </div>
             <div class="section">
-                <div class="section-header"><span class="section-title">5. 현재 사용 중인 멀티 계정</span><button class="reset-btn" onclick="resetSection('account')">전체 해제</button></div>
+                <div class="section-header"><span class="section-title">[5] 사용 중인 멀티 계정</span><button class="reset-btn" onclick="resetSection('account')">전체 해제</button></div>
                 <div class="btn-group" id="account-container">
                     <button class="unit-btn time-none" id="acc-01" onclick="toggleAccount('01')">계정 01</button>
                     <button class="unit-btn time-none" id="acc-02" onclick="toggleAccount('02')">계정 02</button>
@@ -127,10 +138,10 @@
             </div>
         </div> 
         <div class="manual-section" style="margin-top:15px; padding:15px; background-color:#fff; border:1px dashed #e9e4d9; border-radius:12px; font-size:13px; line-height:1.6; color:#495057;">
-            <div style="font-weight:bold; margin-bottom:8px; color:#222;"> 그저 내부 도구일 뿐 v1.4 (260130 시트 반영)</div>
-            <span> • 이름 입력 시 자동 저장되고 시간 그룹별 색상을 지정했습니다.</span><br>
-            <span> • 동일 사이트는 선택 시 자동으로 묶이며, 특정 기체는 휴무일에 표기되지 않습니다.</span><br>
-            <span> • 기체 특이사항은 예정 버튼 하단에 팝업으로 표시되며, <b style="color:#ff4d4f;">신규 사이트</b>는 우측 상단에 점멸 표시가 나타납니다.</span><br>
+            <div style="font-weight:bold; margin-bottom:8px; color:#222;">[ Notes ]</div>
+            <span> • 근무 시간 그룹 순서별 정렬 / 최대 2명 선택 가능</span><br>
+            <span> • 동일 사이트 선택 시 자동 묶임 / 특정 기체 휴무일 적용</span><br>
+            <span> • 기체 특이사항 하단 팝업 / <b style="color:#ff4d4f;">신규 사이트</b>는 우상단 점멸 표시</span><br>
             <span> • 내부 도구이므로 외부 노출에 유의바랍니다.</span>
         </div>
     </div>
@@ -219,13 +230,26 @@
         document.getElementById('shift-container').innerHTML = "";
         document.getElementById('plan-container').innerHTML = "";
         document.getElementById('out-container').innerHTML = "";
-        document.getElementById('person-container').innerHTML = "";
+        document.getElementById('person-day-container').innerHTML = "";
+        document.getElementById('person-night-container').innerHTML = "";
 
         const savedName = localStorage.getItem('monitor_my_name');
         if (savedName) document.getElementById('my-name-input').value = savedName;
 
         const currentDay = new Date().getDay();
-        renderContainer('person-container', personnelData.map(p => ({name: p.name, type: 'people', class: p.class})));
+        
+        // 인원 데이터 분리 렌더링
+        const dayStaff = personnelData.filter(p => {
+            const hour = parseInt(p.class.split('-')[1]);
+            return hour >= 7 && hour <= 15;
+        });
+        const nightStaff = personnelData.filter(p => {
+            const hour = parseInt(p.class.split('-')[1]);
+            return hour >= 18;
+        });
+
+        renderContainer('person-day-container', dayStaff.map(p => ({name: p.name, type: 'people', class: p.class})));
+        renderContainer('person-night-container', nightStaff.map(p => ({name: p.name, type: 'people', class: p.class})));
 
         const filterHoliday = (name) => {
             if (currentDay === 2 && (name.includes("부산 3") || name.includes("부산 4"))) return false;
@@ -262,8 +286,8 @@
         updatePersonButtonsState();
         applyHighlight(); 
         const currentH = String((new Date().getHours() + 1) % 24).padStart(2, '0');
-        document.querySelector('.units-section .section:nth-child(2) .section-title').innerText = `3. 예정 (🟢: ${currentH}시 예정 / 🔴: 신규 사이트)`;
-        document.querySelector('.extra-section .section:first-child .section-title').innerText = `4. 출차 예정 (🟢)`;
+        document.querySelector('.units-section .section:nth-child(2) .section-title').innerText = `[3] 예정 기체 (🟢: ${currentH}시 예정 / 🔴: 신규)`;
+        document.querySelector('.extra-section .section:first-child .section-title').innerText = `[4] 출차 예정 기체 (🟢)`;
 
         updatePreview();
     }
@@ -374,7 +398,8 @@
     function updatePersonButtonsState() {
         const inputName = document.getElementById('my-name-input').value.trim();
         const maxLimit = (inputName === "") ? 2 : 1;
-        document.querySelectorAll('#person-container .unit-btn').forEach(btn => {
+        // 두 개의 컨테이너 모두에서 버튼 상태 업데이트
+        document.querySelectorAll('#person-day-container .unit-btn, #person-night-container .unit-btn').forEach(btn => {
             const isFull = selection.people.length >= maxLimit;
             const isSelected = btn.classList.contains('active');
             btn.disabled = isFull && !isSelected;
@@ -411,14 +436,11 @@
         const h = String(nextH).padStart(2, '0');
         const inputName = document.getElementById('my-name-input').value.trim();
     
-        // [수정] 중복 출력을 방지하기 위해 구조를 변경했습니다.
         const getP = (name) => { 
             const info = personnelData.find(p => p.name === name); 
             const timeStr = info ? info.time : "";
             
             if (info && info.id) {
-                // 핵심: <@ID> 앞뒤로 한 칸씩 공백을 주어 슬랙이 다른 텍스트와 혼동하지 않게 합니다.
-                // 화면(프리뷰)에서는 보이지 않지만 복사 시에는 포함됩니다.
                 return `<span class="slack-mention">@${name}</span><span class="hidden-id"> <@${info.id}> </span><span class="slack-time">${timeStr}</span>`;
             } else {
                 return `<span class="slack-mention">@${name}</span> <span class="slack-time">${timeStr}</span>`;
@@ -458,14 +480,14 @@
             lines.push(`• 출차: ${outParts.join(" / ")}`);
         }
     
-        lines.push(selection.account.length === 0 ? "• 멀티 계정 미사용" : `• 멀티 계정 ${selection.account.join(", ")} 사용 중`);
-    
+        if (selection.account.length > 0) {
+            lines.push(`• 멀티 계정 ${selection.account.join(", ")} 사용 중`);
+        }    
         document.getElementById('preview').innerHTML = lines.join('\n');
     }
     
     function copyToClipboard() {
         const preview = document.getElementById('preview');
-        // innerText를 사용하면 .hidden-id { display: none } 처리된 텍스트도 긁어오는 브라우저 특성을 이용합니다.
         const textToCopy = preview.innerText;
 
         const textarea = document.createElement('textarea');
