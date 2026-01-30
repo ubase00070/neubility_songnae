@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="robots" content="noindex, nofollow">
-    <title>Just a Tool v.1.3</title>
+    <title>Just a Tool v.1.4</title>
     <style>
         body { font-family: 'Malgun Gothic', sans-serif; padding: 15px; background-color: #EFE9D9; color: #333; margin: 0; }
         .main-wrapper { display: grid; gap: 15px; max-width: 1400px; margin: auto; grid-template-areas: "person preview" "units units" "extra extra"; grid-template-columns: 1fr 400px; }
@@ -18,18 +18,27 @@
         button.unit-btn.next-highlight { background-color: #34f84f !important; border-color: #b2f2bb !important; color: #222 !important; font-weight: bold !important; box-shadow: 0 0 8px #d3f9d8; animation: highlight-pulse 2s infinite; }
         button.unit-btn.active { border: 1px solid #222 !important; border-bottom-width: 4px !important; font-weight: bold !important; background-color: #4dabf7 !important; color: white !important; }
         
+        /* [추가] 레드 닷 애니메이션 스타일 */
+        .red-dot {
+            position: absolute; top: -0px; right: -0px; width: 6px; height: 6px;
+            background-color: #ff4d4f; border-radius: 50%;
+            box-shadow: 0 0 5px rgba(255, 77, 79, 0.8);
+            animation: dot-pulse 1.5s infinite;
+        }
+        @keyframes dot-pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.3); opacity: 0.5; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
         .highlight-pink { background-color: #fff0f6 !important; border-color: #ffdeeb !important; color: #d6336c !important; }
         .mask-text { filter: blur(0px); transition: filter 0.3s; user-select: all; }
         .mask-text:hover { filter: blur(0); }
 
-        /* [수정] 특이사항 팝업 스타일: 위치를 absolute로 변경하고 마우스를 따라가게 설정 */
         #note-popup {
-            position: absolute; 
-            width: 280px; 
-            background: #333; color: #fff; padding: 15px; border-radius: 8px;
+            position: absolute; width: 280px; background: #333; color: #fff; padding: 15px; border-radius: 8px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.2); font-size: 13px; line-height: 1.5;
-            display: none; z-index: 9999; border-left: 5px solid #ffdeeb;
-            pointer-events: none; /* 팝업이 마우스 클릭을 방해하지 않도록 설정 */
+            display: none; z-index: 9999; border-left: 5px solid #ffdeeb; pointer-events: none;
         }
         #note-popup b { color: #ffdeeb; display: block; margin-bottom: 5px; }
 
@@ -95,9 +104,9 @@
         <div class="manual-section" style="margin-top:15px; padding:15px; background-color:#fff; border:1px dashed #e9e4d9; border-radius:12px; font-size:13px; line-height:1.6; color:#495057;">
             <div style="font-weight:bold; margin-bottom:8px; color:#222;"> 어딘가의 내부 도구 v1.3 (** 260130 기체 출근현황 시트 반영)</div>
             <span> • 이름 입력 시 자동 저장되고 시간 그룹별 색상을 지정했습니다.</span><br>
-            <span> • 동일 사이트는 선택 시 자동으로 묶이며 특정 기체는 휴무일에 표기되지 않습니다.</span><br>
-	        <span> • 기체 특이사항은 예정 버튼 하단에 팝업으로 표시됩니다.</span><br>
-	        <span> • 내부 도구이므로 외부 노출에 유의바랍니다.</span>
+            <span> • 동일 사이트는 선택 시 자동으로 묶이며, 특정 기체는 휴무일에 표기되지 않습니다.</span><br>
+            <span> • 기체 특이사항은 예정 버튼 하단에 팝업으로 표시되며, <b style="color:#ff4d4f;">신규</b>는 우측 상단에 점멸 표시가 나타납니다.</span><br>
+            <span> • 내부 도구이므로 외부 노출에 유의바랍니다.</span>
         </div>
     </div>
 </div>
@@ -109,11 +118,14 @@
 
     // [특이사항 데이터 저장소]
     const unitNotes = {
-	"리센츠 1": "단지공사예정<br>기체 꺼내져있을 경우에만 순회",
-	"리센츠 2": "단지공사예정<br>기체 꺼내져있을 경우에만 순회",
-	"고양 래미안": "2월까지 순회보류",
-	"두루아이 5": "신규 - LIT_인천국제공항공사",
+        "리센츠 1": "단지공사예정<br>기체 꺼내져있을 경우에만 순회",
+        "리센츠 2": "단지공사예정<br>기체 꺼내져있을 경우에만 순회",
+        "고양 래미안": "2월까지 순회보류",
+        "두루아이 5": "신규 - LIT_인천국제공항공사",
     };
+
+    // [추가] 신규 기체 데이터 리스트 (여기에 등록된 기체만 레드 닷이 붙음)
+    const newUnits = ["두루아이 5"];
 
     const timeTable = {
         "07": { plan: ["용인 고진", "서강대", "경희대", "성남 202", "성남 203"], out: ["부산 1", "부산 3"] },
@@ -192,9 +204,8 @@
         
         updatePersonButtonsState();
         applyHighlight(); 
-		// --- 섹션 타이틀에 시간 표시 ---
         const currentH = String((new Date().getHours() + 1) % 24).padStart(2, '0');
-        document.querySelector('.units-section .section:nth-child(2) .section-title').innerText = `3. 예정 (🟢: ${currentH}시 예정)`;
+        document.querySelector('.units-section .section:nth-child(2) .section-title').innerText = `3. 예정 (🟢: ${currentH}시 예정 / 🔴: 신규)`;
         document.querySelector('.extra-section .section:first-child .section-title').innerText = `4. 출차 예정 (🟢)`;
 
         updatePreview();
@@ -207,16 +218,18 @@
         data.forEach(item => {
             const btn = document.createElement('button');
             let extraClass = item.class || 'time-none';
-            const pinkTargets = [/* 핑크 하이라이트 임시중지 "DMZ", "부경대", "강원대", "고양 래미안"*/];
-            if (pinkTargets.some(target => item.name.includes(target))) {
-                extraClass += ' highlight-pink';
-            }
-
+            
             btn.className = `unit-btn ${extraClass}`;
             btn.textContent = item.name;
             btn.dataset.name = item.name; 
 
-            // [수정된 부분] item.type이 'shift'(진행 중)가 아닐 때만 팝업 이벤트를 등록합니다.
+            // [추가] 신규 기체라면 버튼 내부에 레드 닷 삽입
+            if (newUnits.includes(item.name)) {
+                const dot = document.createElement('span');
+                dot.className = 'red-dot';
+                btn.appendChild(dot);
+            }
+
             if (item.type !== 'shift') {
                 btn.onmouseenter = (e) => {
                     const note = unitNotes[item.name];
@@ -226,24 +239,19 @@
                         updatePopupPosition(e);
                     }
                 };
-                btn.onmousemove = (e) => {
-                    updatePopupPosition(e);
-                };
+                btn.onmousemove = (e) => { updatePopupPosition(e); };
 
-				// 팝업 위치 계산 내부 함수
                 function updatePopupPosition(e) {
-                    const padding = 15; // 마우스와 팝업 사이 간격
-                    const popupWidth = 280; // CSS에 설정된 Width
+                    const padding = 15;
+                    const popupWidth = 280;
                     let leftPos = e.pageX + padding;
-                
-                    //// 만약 팝업이 오른쪽 화면 끝(window.innerWidth)을 넘어간다면 왼쪽으로 이동
                     if (leftPos + popupWidth > window.innerWidth) {
-                    leftPos = e.pageX - popupWidth - padding;
+                        leftPos = e.pageX - popupWidth - padding;
                     }
                     popup.style.left = leftPos + 'px';
                     popup.style.top = (e.pageY + padding) + 'px';
                 }   
-				btn.onmouseleave = () => { popup.style.display = 'none'; };
+                btn.onmouseleave = () => { popup.style.display = 'none'; };
             }
 
             btn.onclick = () => {
@@ -397,42 +405,3 @@
 </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
