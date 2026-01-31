@@ -410,10 +410,22 @@
         if (selectedArray.length === 0) return "-";
         const groups = [];
         const processedIndexes = new Set();
+
+        const excludeGroups = ["두루아이"];
+        
         selectedArray.forEach((item, index) => {
             if (processedIndexes.has(index)) return;
+            
             const match = item.match(/^(.*)\s(\d+)$/);
             const baseName = match ? match[1] : item;
+
+            // 예외 목록에 포함된 이름이면 그룹화 로직을 건너뜀
+            if (excludeGroups.includes(baseName)) {
+                groups.push(item);
+                processedIndexes.add(index);
+                return;
+            }
+            
             const sameGroup = [];
             selectedArray.forEach((innerItem, innerIndex) => {
                 const innerMatch = innerItem.match(/^(.*)\s(\d+)$/);
@@ -507,4 +519,5 @@
 </script>
 </body>
 </html>
+
 
