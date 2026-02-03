@@ -190,11 +190,11 @@
         "리센츠 1": "단지공사예정<br>기체 꺼내져있을 경우에만 순회",
         "리센츠 2": "단지공사예정<br>기체 꺼내져있을 경우에만 순회",
         "고양 래미안": "2월까지 순회보류",
-        "두루아이 5": "신규 - LIT_인천국제공항공사",
+        "두루아이 5": "LIT_인천국제공항공사",
         "인력개발원": "기체 고장",
         "용인 고진": "미니맵 위치 미노출 이슈<br>순회 보류",
         "성남 201": "파손으로 순회보류",
-        "파주": "뉴비고 미연동으로 정상화 전까지 순회보류"
+        "파주": "수리 중"
     };
 
     const newUnits = ["두루아이 5"];
@@ -256,6 +256,7 @@
 
         const filterHoliday = (name) => {
             if (currentDay === 2 && (name.includes("부산 3") || name.includes("부산 4"))) return false;
+            if (currentDay === 3 && name.includes("두루아이 5")) return false;
             if ((currentDay === 0 || currentDay === 6) && (name.includes("인력개발원") || name.includes("자체순찰"))) return false;
             return true;
         };
@@ -522,6 +523,7 @@
 </script>
 </body>
 </html>
+
 
 
 
