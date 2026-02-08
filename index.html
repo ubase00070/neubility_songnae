@@ -252,7 +252,7 @@
 
         const filterHoliday = (name) => {
             if (currentDay === 2 && (name.includes("부산 3") || name.includes("부산 4"))) return false;
-            if (currentDay === 3 && name.includes("두루아이 5")) return false;
+            /* if (currentDay === 3 && name.includes("두루아이 5")) return false; */
             if ((currentDay === 0 || currentDay === 6) && (name.includes("인력개발원") || name.includes("자체순찰"))) return false;
             return true;
         };
@@ -519,6 +519,7 @@
 </script>
 </body>
 </html>
+
 
 
 
