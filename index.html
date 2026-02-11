@@ -140,7 +140,7 @@
         <div class="manual-section" style="margin-top:15px; padding:15px; background-color:#fff; border:1px dashed #e9e4d9; border-radius:12px; font-size:13px; line-height:1.6; color:#495057;">
             <div style="font-weight:bold; margin-bottom:8px; color:#222;">[ Notes ]</div>
             <span> • 근무 시간 그룹 순서별 정렬 / 동일 사이트 선택 시 자동 묶임</span><br>
-            <span> • <b = style="color:#ff00ff;">부산 3, 4 - 화요일 휴무 / 자체순찰 01, 02, 인개원 - 주말 휴무 적용됨</b></span><br>
+            <span> • <b = style="color:#ff00ff;">자체순찰 01, 02, 인력개발원 - 주말 휴무 적용됨</b></span><br>
             <span> • 기체 특이사항 하단 팝업 / <b style="color:#ff4d4f;">신규 사이트</b> 점멸 표시</span><br>
             <span> • ### 우리 사이트 아직 정상영업합니다. ### </span>
         </div>
@@ -250,7 +250,7 @@
         renderContainer('person-night-container', nightStaff.map(p => ({name: p.name, type: 'people', class: p.class})));
 
         const filterHoliday = (name) => {
-            if (currentDay === 2 && (name.includes("부산 3") || name.includes("부산 4"))) return false;
+            /* if (currentDay === 2 && (name.includes("부산 3") || name.includes("부산 4"))) return false; */
             /* if (currentDay === 3 && name.includes("두루아이 5")) return false; */
             if ((currentDay === 0 || currentDay === 6) && (name.includes("인력개발원") || name.includes("자체순찰"))) return false;
             return true;
@@ -518,6 +518,7 @@
 </script>
 </body>
 </html>
+
 
 
 
