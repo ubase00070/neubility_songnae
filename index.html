@@ -141,7 +141,7 @@
             <div style="font-weight:bold; margin-bottom:8px; color:#222;">[ Notes ]</div>
             <span> • 근무 시간 그룹 순서별 정렬 / 동일 사이트 선택 시 자동 묶임</span><br>
             <span> • <b = style="color:#ff00ff;">자체순찰 01, 02, 인력개발원 - 주말 휴무 적용됨</b></span><br>
-            <span> • 기체 특이사항 하단 팝업 / <b style="color:#ff4d4f;">신규 사이트</b> 점멸 표시</span><br>
+            <span> • 기체 특이사항 하단 팝업 / <b style="color:#ff4d4f;">특이사항 기체는</b> 점멸 표시</span><br>
             <span> • ### 우리 사이트 아직 정상영업합니다. ### </span>
         </div>
     </div>
@@ -193,7 +193,7 @@
         "인력개발원": "기체 고장",
     };
 
-    const newUnits = ["두루아이 5"];
+    const newUnits = ["두루아이 5", "성남 200", "고양 래미안", "인력개발원"];
 
     const timeTable = {
         "07": { plan: ["용인 고진", "서강대", "경희대", "성남 202", "성남 203"], out: ["부산 1", "부산 3"] },
@@ -286,7 +286,7 @@
         updatePersonButtonsState();
         applyHighlight(); 
         const currentH = String((new Date().getHours() + 1) % 24).padStart(2, '0');
-        document.querySelector('.units-section .section:nth-child(2) .section-title').innerText = `[3] 예정 기체 (🟢: ${currentH}시 예정 / 🔴: 신규)`;
+        document.querySelector('.units-section .section:nth-child(2) .section-title').innerText = `[3] 예정 기체 (🟢: ${currentH}시 예정 / 🔴: 기체 특이사항)`;
         document.querySelector('.extra-section .section:first-child .section-title').innerText = `[4] 출차 예정 기체 (🟢)`;
 
         updatePreview();
@@ -519,6 +519,7 @@
 </script>
 </body>
 </html>
+
 
 
 
