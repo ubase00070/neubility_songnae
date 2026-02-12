@@ -5,7 +5,7 @@
     <meta name="robots" content="noindex, nofollow">
     <title>Just a Simple Tool</title>
     <style>
-        body { font-family: 'Malgun Gothic', sans-serif; padding: 15px; background-color: #EFE9D9; color: #333; margin: 0; }
+        body { font-family: 'Malgun Gothic', sans-serif; padding: 15px; background-color: #EFE9D9; color: #333; margin: 0; overflow-x: hidden; }
         .main-wrapper { display: grid; gap: 15px; max-width: 1400px; margin: auto; grid-template-areas: "person preview" "units units" "extra extra"; grid-template-columns: 0.92fr 1.08fr; }
         .person-section { grid-area: person; } .preview-section { grid-area: preview; } .units-section { grid-area: units; } .extra-section { grid-area: extra; }
         .section { background: #FDFCF0; padding: 15px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.03); border: 1px solid #e9e4d9; height: fit-content; }
@@ -17,10 +17,16 @@
         button.unit-btn:disabled { cursor: not-allowed; opacity: 0.6; }
         .reset-btn { font-size: 11px; padding: 2px 10px; border-radius: 20px; border: 1px solid #ced4da; background: #fff; color: #868e96; cursor: pointer; margin-left: 4px; }
         
-        /* 자동 선택 버튼 스타일 (연두색 테두리로 포인트) */
-        .auto-btn { font-size: 11px; padding: 2px 12px; border-radius: 20px; border: 1px solid #37b24d; background: #fff; color: #2b8a3e; cursor: pointer; font-weight: bold; transition: all 0.2s; }
+        /* 자동 선택 버튼 스타일 및 점멸 애니메이션 추가 */
+        .auto-btn { font-size: 11px; padding: 2px 12px; border-radius: 20px; border: 2px solid #37b24d; background: #fff; color: #2b8a3e; cursor: pointer; font-weight: bold; transition: all 0.2s; animation: border-pulse 2s infinite; }
         .auto-btn:hover { background: #ebfbee; }
         .auto-btn:active { transform: scale(0.95); }
+
+        @keyframes border-pulse {
+            0% { border-color: #37b24d; box-shadow: 0 0 0 0px rgba(55, 178, 77, 0.4); }
+            50% { border-color: #b2f2bb; box-shadow: 0 0 0 6px rgba(55, 178, 77, 0); }
+            100% { border-color: #37b24d; box-shadow: 0 0 0 0px rgba(55, 178, 77, 0); }
+        }
 
         button.unit-btn.next-highlight { background-color: #34f84f !important; border-color: #b2f2bb !important; color: #222 !important; font-weight: bold !important; box-shadow: 0 0 8px #d3f9d8; animation: highlight-pulse 2s infinite; }
         button.unit-btn.active { border: 1px solid #222 !important; border-bottom-width: 4px !important; font-weight: bold !important; background-color: #4dabf7 !important; color: white !important; transform: translateY(1px); }
@@ -49,6 +55,20 @@
         .user-save-zone { font-size: 11px; display: flex; align-items: center; gap: 5px; background: #f1f3f5; padding: 6px 10px; border-radius: 4px; border: 1px solid #dee2e6; }
         .user-save-zone input, .user-save-zone select { border: 1px solid #ced4da; border-radius: 3px; padding: 2px 5px; font-size: 11px; }
         .sub-group-title { font-size: 11px; color: #868e96; margin: 3px 0 2px 1px; font-weight: bold; display: flex; align-items: center; gap: 4px; }
+
+        /* 폭죽 효과 CSS */
+        .particle {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            pointer-events: none;
+            border-radius: 50%;
+            z-index: 10000;
+        }
+        @keyframes confetti-fall {
+            0% { transform: translate(0, 0) rotate(0deg); opacity: 1; }
+            100% { transform: translate(var(--dx), var(--dy)) rotate(360deg); opacity: 0; }
+        }
     </style>
 </head>
 <body>
@@ -266,6 +286,28 @@
         updatePreview();
     }
 
+    // 폭죽(색종이) 생성 함수
+    function createConfetti(x, y) {
+        const colors = ['#34f84f', '#4dabf7', '#ffdeeb', '#fcc419', '#ff922b'];
+        for (let i = 0; i < 8; i++) {
+            const p = document.createElement('div');
+            p.className = 'particle';
+            p.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            
+            const dx = (Math.random() - 0.5) * 80 + 'px';
+            const dy = (Math.random() - 0.5) * 80 + 'px';
+            p.style.setProperty('--dx', dx);
+            p.style.setProperty('--dy', dy);
+            
+            p.style.left = x + 'px';
+            p.style.top = y + 'px';
+            p.style.animation = `confetti-fall ${0.4 + Math.random() * 0.4}s ease-out forwards`;
+            
+            document.body.appendChild(p);
+            setTimeout(() => p.remove(), 1000);
+        }
+    }
+
     function renderContainer(id, data) {
         const container = document.getElementById(id);
         const popup = document.getElementById('note-popup');
@@ -303,7 +345,6 @@
         });
     }
 
-    // 선택 토글 공통 로직
     function toggleSelection(type, name, btn) {
         const arr = selection[type];
         const idx = arr.indexOf(name);
@@ -316,27 +357,25 @@
             if (type === 'people' && arr.length >= max) return;
             arr.push(name); 
             btn.classList.add('active');
+
+            // 클릭 시 폭죽 효과 추가
+            const rect = btn.getBoundingClientRect();
+            createConfetti(rect.left + rect.width / 2, rect.top + rect.height / 2);
         }
         if (type === 'people') updatePersonButtonsState();
         updatePreview();
     }
 
-    // [핵심] 자동 선택 촤라락 애니메이션 함수
     async function autoSelectNext() {
-        // 하이라이트된 버튼들 찾기 (3번 섹션과 4번 섹션 모두 포함)
         const highlightBtns = Array.from(document.querySelectorAll('.next-highlight'));
-        
-        // 이미 active인 버튼은 제외하고 순차적으로 실행
         for (let i = 0; i < highlightBtns.length; i++) {
             const btn = highlightBtns[i];
             const type = btn.parentElement.id.replace('-container', '');
             const name = btn.dataset.name;
 
             if (!selection[type].includes(name)) {
-                // 클릭 효과 유발
                 toggleSelection(type, name, btn);
-                // 촤라락 소요 시간 조절 (버튼당 50ms 간격, 약 2~3초 내외 완공)
-                await new Promise(resolve => setTimeout(resolve, 150)); 
+                await new Promise(resolve => setTimeout(resolve, 180)); 
             }
         }
     }
@@ -382,7 +421,13 @@
         const btn = document.getElementById(`acc-${val}`);
         const idx = selection.account.indexOf(val);
         if (idx > -1) { selection.account.splice(idx, 1); btn.classList.remove('active'); }
-        else { selection.account.push(val); selection.account.sort(); btn.classList.add('active'); }
+        else { 
+            selection.account.push(val); 
+            selection.account.sort(); 
+            btn.classList.add('active');
+            const rect = btn.getBoundingClientRect();
+            createConfetti(rect.left + rect.width / 2, rect.top + rect.height / 2);
+        }
         updatePreview();
     }
 
