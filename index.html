@@ -6,7 +6,6 @@
     <title>Just a Simple Tool</title>
     <style>
         body { font-family: 'Malgun Gothic', sans-serif; padding: 15px; background-color: #EFE9D9; color: #333; margin: 0; }
-        /* 그리드 조정: 왼쪽을 살짝 줄여서 프리뷰 공간 확보 */
         .main-wrapper { display: grid; gap: 15px; max-width: 1400px; margin: auto; grid-template-areas: "person preview" "units units" "extra extra"; grid-template-columns: 0.92fr 1.08fr; }
         .person-section { grid-area: person; } .preview-section { grid-area: preview; } .units-section { grid-area: units; } .extra-section { grid-area: extra; }
         .section { background: #FDFCF0; padding: 15px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.03); border: 1px solid #e9e4d9; height: fit-content; }
@@ -14,56 +13,31 @@
         .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
         .section-title { font-weight: bold; display: block; color: #495057; border-left: 4px solid #adb5bd; padding-left: 8px; font-size: 0.85rem; }
         
-        button.unit-btn { padding: 5px 9px; border: 1px solid #e9ecef; background: #fff; cursor: pointer; border: 1px solid #ced4da; border-radius: 4px; font-size: 12px; font-weight: 500; color: #444; border-bottom-width: 3.5px !important; border-bottom-style: solid !important; box-sizing: border-box; transition: background-color 0.1s; transform: none !important; margin: 2px; position: relative; }
+        button.unit-btn { padding: 5px 9px; border: 1px solid #e9ecef; background: #fff; cursor: pointer; border: 1px solid #ced4da; border-radius: 4px; font-size: 12px; font-weight: 500; color: #444; border-bottom-width: 3.5px !important; border-bottom-style: solid !important; box-sizing: border-box; transition: background-color 0.1s, transform 0.1s; transform: none !important; margin: 2px; position: relative; }
         button.unit-btn:disabled { cursor: not-allowed; opacity: 0.6; }
-        .reset-btn { font-size: 11px; padding: 2px 10px; border-radius: 20px; border: 1px solid #ced4da; background: #fff; color: #868e96; cursor: pointer; }
+        .reset-btn { font-size: 11px; padding: 2px 10px; border-radius: 20px; border: 1px solid #ced4da; background: #fff; color: #868e96; cursor: pointer; margin-left: 4px; }
+        
+        /* 자동 선택 버튼 스타일 (연두색 테두리로 포인트) */
+        .auto-btn { font-size: 11px; padding: 2px 12px; border-radius: 20px; border: 1px solid #37b24d; background: #fff; color: #2b8a3e; cursor: pointer; font-weight: bold; transition: all 0.2s; }
+        .auto-btn:hover { background: #ebfbee; }
+        .auto-btn:active { transform: scale(0.95); }
+
         button.unit-btn.next-highlight { background-color: #34f84f !important; border-color: #b2f2bb !important; color: #222 !important; font-weight: bold !important; box-shadow: 0 0 8px #d3f9d8; animation: highlight-pulse 2s infinite; }
-        button.unit-btn.active { border: 1px solid #222 !important; border-bottom-width: 4px !important; font-weight: bold !important; background-color: #4dabf7 !important; color: white !important; }
+        button.unit-btn.active { border: 1px solid #222 !important; border-bottom-width: 4px !important; font-weight: bold !important; background-color: #4dabf7 !important; color: white !important; transform: translateY(1px); }
         
         .red-dot { position: absolute; top: -0px; right: -0px; width: 6px; height: 6px; background-color: #ff4d4f; border-radius: 50%; box-shadow: 0 0 5px rgba(255, 77, 79, 0.8); animation: dot-pulse 1.5s infinite; }
         @keyframes dot-pulse { 0% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.3); opacity: 0.5; } 100% { transform: scale(1); opacity: 1; } }
 
-        /* 프리뷰 컨테이너에 위치 기준(relative) 설정 */
         #preview { 
-            position: relative; /* 하단 문구 배치를 위해 추가 */
-            background: #FFFFFF; 
-            color: #1D1C1D;      
-            border: 1px solid #35373B;
-            border-radius: 8px;
-            padding: 20px;
-            padding-bottom: 40px; /* 하단 문구가 들어갈 공간 확보 */
-            white-space: pre-wrap;
-            font-family: 'Segoe UI', Slack-Lato, AppleColorEmoji, sans-serif; 
-            font-size: 15px;      
-            line-height: 1.6;
-            min-height: 180px;
-            letter-spacing: -0.2px;
+            position: relative; background: #FFFFFF; color: #1D1C1D; border: 1px solid #35373B; border-radius: 8px; padding: 20px; padding-bottom: 40px; white-space: pre-wrap; font-family: 'Segoe UI', Slack-Lato, AppleColorEmoji, sans-serif; font-size: 15px; line-height: 1.6; min-height: 180px; letter-spacing: -0.2px;
         }
 
-        .slack-mention {
-            background: rgba(29, 155, 209, 0.1); 
-            color: #1D9BD1; 
-            padding: 0px 4px;
-            border-radius: 4px;
-            font-weight: 700;
-            display: inline-block;
-        }
-
-        /* [보완] ID가 화면 프리뷰에서 텍스트로 보이지 않게 숨김 */
-        .hidden-id {
-            display: none;
-        }
-
-        .slack-time {
-            color: #1D9BD1;
-            font-size: 14px;
-            margin-left: 2px;
-        }
+        .slack-mention { background: rgba(29, 155, 209, 0.1); color: #1D9BD1; padding: 0px 4px; border-radius: 4px; font-weight: 700; display: inline-block; }
+        .hidden-id { display: none; }
+        .slack-time { color: #1D9BD1; font-size: 14px; margin-left: 2px; }
 
         #note-popup {
-            position: absolute; width: 280px; background: #333; color: #fff; padding: 15px; border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2); font-size: 13px; line-height: 1.5;
-            display: none; z-index: 9999; border-left: 5px solid #ffdeeb; pointer-events: none;
+            position: absolute; width: 280px; background: #333; color: #fff; padding: 15px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); font-size: 13px; line-height: 1.5; display: none; z-index: 9999; border-left: 5px solid #ffdeeb; pointer-events: none;
         }
         #note-popup b { color: #ffdeeb; display: block; margin-bottom: 5px; }
 
@@ -74,8 +48,6 @@
         .copy-btn.is-active { background-color: #4dabf7 !important; }
         .user-save-zone { font-size: 11px; display: flex; align-items: center; gap: 5px; background: #f1f3f5; padding: 6px 10px; border-radius: 4px; border: 1px solid #dee2e6; }
         .user-save-zone input, .user-save-zone select { border: 1px solid #ced4da; border-radius: 3px; padding: 2px 5px; font-size: 11px; }
-
-        /* 추가된 보조 타이틀 스타일 */
         .sub-group-title { font-size: 11px; color: #868e96; margin: 3px 0 2px 1px; font-weight: bold; display: flex; align-items: center; gap: 4px; }
     </style>
 </head>
@@ -104,7 +76,7 @@
 
     <div class="section preview-section">
         <div class="preview-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-            <span class="section-title" style="border-color: #37b24d;">귀여운 교대 텍스트 생성기 v1.4 (260212 Updated)</span>
+            <span class="section-title" style="border-color: #37b24d;">귀여운 교대 텍스트 생성기 v1.5 (260212 Updated)</span>
             <button class="copy-btn" id="copyBtn" onclick="copyToClipboard()">복사하기</button>
         </div>
         <div id="preview"></div>
@@ -113,11 +85,17 @@
     <div class="units-section">
         <div class="half-grid">
             <div class="section">
-                <div class="section-header"><span class="section-title">[2] 모니터링 중인 기체</span><button class="reset-btn" onclick="resetSection('shift')">전체 해제</button></div>
+                <div class="section-header"><span class="section-title">[2] 모니터링 중</span><button class="reset-btn" onclick="resetSection('shift')">전체 해제</button></div>
                 <div class="btn-group" id="shift-container"></div>
             </div>
             <div class="section">
-                <div class="section-header"><span class="section-title">[3] 예정 (🟢: ${currentH}시 예정)</span><button class="reset-btn" onclick="resetSection('plan')">전체 해제</button></div>
+                <div class="section-header">
+                    <span class="section-title">[3] 예정 (🟢: 예정 / 🔴: 특이사항)</span>
+                    <div style="display:flex; align-items:center;">
+                        <button class="auto-btn" onclick="autoSelectNext()">🟢 자동 선택</button>
+                        <button class="reset-btn" onclick="resetSection('plan')">전체 해제</button>
+                    </div>
+                </div>
                 <div class="btn-group" id="plan-container"></div>
             </div>
         </div>
@@ -130,7 +108,7 @@
                 <div class="btn-group" id="out-container"></div>
             </div>
             <div class="section">
-                <div class="section-header"><span class="section-title">[5] 사용 중인 멀티 계정</span><button class="reset-btn" onclick="resetSection('account')">전체 해제</button></div>
+                <div class="section-header"><span class="section-title">[5] 사용 중 멀티 계정</span><button class="reset-btn" onclick="resetSection('account')">전체 해제</button></div>
                 <div class="btn-group" id="account-container">
                     <button class="unit-btn time-none" id="acc-01" onclick="toggleAccount('01')">계정 01</button>
                     <button class="unit-btn time-none" id="acc-02" onclick="toggleAccount('02')">계정 02</button>
@@ -139,7 +117,9 @@
         </div> 
         <div class="manual-section" style="margin-top:15px; padding:15px; background-color:#fff; border:1px dashed #e9e4d9; border-radius:12px; font-size:13px; line-height:1.6; color:#495057;">
             <div style="font-weight:bold; margin-bottom:8px; color:#222;">[ Notes ]</div>
-            <span> • <b = style="color:#ff00ff;">자체순찰 01, 02, 인력개발원 - 주말 휴무 적용됨</b></span><br>
+            <span> • 이것은 약 수 십초를 아끼기 위한 미묘한 간극에 있는 도구이므로, 'Click Only Semi-Auto'를 모토로 삼았습니다.</span><br>
+            <span> • 자동 선택 버튼을 누르면 [3], [4]의 예정 기체들이 전부 자동 선택됩니다.</span><br>
+            <span> • <b style="color:#ff00ff;">자체순찰 01, 02, 인력개발원 - 주말 휴무 적용됨</b></span><br>
             <span> • 기체 특이사항 하단 팝업 / <b style="color:#ff4d4f;">특이사항 기체는</b> 점멸 표시</span><br>
             <span> • ### 우리 사이트 아직 정상영업합니다. ### </span>
         </div>
@@ -147,7 +127,6 @@
 </div>
 
 <script>
-
     const personnelData = [
         { name: "김지훈", time: "(0700-1600)(U)", class: "time-07", id: "U07LD5HA6KC" }, 
         { name: "오정훈", time: "(0700-1600)(U)", class: "time-07", id: "U081BN7R3FX" }, 
@@ -182,7 +161,9 @@
         { name: "임다연", time: "(2200-0700)(U)", class: "time-22", id: "U07MBG99B1S" }, 
         { name: "임아연", time: "(2200-0700)(U)", class: "time-22", id: "U07MMMNQZ1P" }, 
         { name: "안대관", time: "(2330-0830)(U)", class: "time-23", id: "U07E4DMLYR3" }
-    ];    const rawUnits = ["용인 고진", "서강대", "경희대 1", "경희대 2", "성남 200", "성남 201", "성남 202", "성남 203", "부산 1", "부산 2", "부산 3", "부산 4", "파주", "리센츠 1", "리센츠 2", "평택 1", "평택 2", "부산 서면", "부천 중동", "두루아이 5", "인력개발원", "엘스 1", "엘스 2", "송도 국캠", "자체순찰 01", "자체순찰 02", "김포 1", "김포 2", "평택 지제", "두루아이 3", "쉴더스", "신동백", "청담 르엘", "전주천", "아주대 1", "아주대 2", "고양 래미안", "강원대 1", "강원대 2", "DMZ", "부경대"];
+    ];
+
+    const rawUnits = ["용인 고진", "서강대", "경희대 1", "경희대 2", "성남 200", "성남 201", "성남 202", "성남 203", "부산 1", "부산 2", "부산 3", "부산 4", "파주", "리센츠 1", "리센츠 2", "평택 1", "평택 2", "부산 서면", "부천 중동", "두루아이 5", "인력개발원", "엘스 1", "엘스 2", "송도 국캠", "자체순찰 01", "자체순찰 02", "김포 1", "김포 2", "평택 지제", "두루아이 3", "쉴더스", "신동백", "청담 르엘", "전주천", "아주대 1", "아주대 2", "고양 래미안", "강원대 1", "강원대 2", "DMZ", "부경대"];
     const outUnitsList = ["부산 1", "부산 2", "부산 3", "부산 4", "성남 200", "성남 201", "성남 202", "성남 203", "자체순찰 01", "자체순찰 02", "신동백", "청담 르엘", "전주천", "두루아이 5"];
 
     const unitNotes = {
@@ -236,7 +217,6 @@
 
         const currentDay = new Date().getDay();
         
-        // 인원 데이터 분리 렌더링
         const dayStaff = personnelData.filter(p => {
             const hour = parseInt(p.class.split('-')[1]);
             return hour >= 7 && hour <= 15;
@@ -250,8 +230,6 @@
         renderContainer('person-night-container', nightStaff.map(p => ({name: p.name, type: 'people', class: p.class})));
 
         const filterHoliday = (name) => {
-            /* if (currentDay === 2 && (name.includes("부산 3") || name.includes("부산 4"))) return false; */
-            /* if (currentDay === 3 && name.includes("두루아이 5")) return false; */
             if ((currentDay === 0 || currentDay === 6) && (name.includes("인력개발원") || name.includes("자체순찰"))) return false;
             return true;
         };
@@ -259,9 +237,7 @@
         const filteredUnits = rawUnits.filter(filterHoliday);
         const unitsOrderFiltered = filteredUnits.map(u => u.replace("자체순찰", "자체순찰 "));
 
-        renderContainer('shift-container', unitsOrderFiltered
-        .filter(name => name !== "부산국립과학관") 
-        .map(name => ({name, type: 'shift', class: 'time-none'})));
+        renderContainer('shift-container', unitsOrderFiltered.filter(name => name !== "부산국립과학관").map(name => ({name, type: 'shift', class: 'time-none'})));
         
         const planData = [];
         const processed = new Set();
@@ -285,8 +261,7 @@
         updatePersonButtonsState();
         applyHighlight(); 
         const currentH = String((new Date().getHours() + 1) % 24).padStart(2, '0');
-        document.querySelector('.units-section .section:nth-child(2) .section-title').innerText = `[3] 예정 기체 (🟢: ${currentH}시 예정 / 🔴: 기체 특이사항)`;
-        document.querySelector('.extra-section .section:first-child .section-title').innerText = `[4] 출차 예정 기체 (🟢)`;
+        document.querySelector('.units-section .section:nth-child(2) .section-title').innerText = `[3] 예정 기체 (🟢: ${currentH}시 예정 / 🔴: 특이사항)`;
 
         updatePreview();
     }
@@ -318,35 +293,52 @@
                     }
                 };
                 btn.onmousemove = (e) => { updatePopupPosition(e); };
-
-                function updatePopupPosition(e) {
-                    const padding = 15;
-                    const popupWidth = 280;
-                    let leftPos = e.pageX + padding;
-                    if (leftPos + popupWidth > window.innerWidth) {
-                        leftPos = e.pageX - popupWidth - padding;
-                    }
-                    popup.style.left = leftPos + 'px';
-                    popup.style.top = (e.pageY + padding) + 'px';
-                }   
                 btn.onmouseleave = () => { popup.style.display = 'none'; };
             }
 
             btn.onclick = () => {
-                const arr = selection[item.type];
-                const idx = arr.indexOf(item.name);
-                if (idx > -1) { arr.splice(idx, 1); btn.classList.remove('active'); }
-                else {
-                    const inputName = document.getElementById('my-name-input').value.trim();
-                    const max = (inputName === "") ? 2 : 1;
-                    if (item.type === 'people' && arr.length >= max) return;
-                    arr.push(item.name); btn.classList.add('active');
-                }
-                if (item.type === 'people') updatePersonButtonsState();
-                updatePreview();
+                toggleSelection(item.type, item.name, btn);
             };
             container.appendChild(btn);
         });
+    }
+
+    // 선택 토글 공통 로직
+    function toggleSelection(type, name, btn) {
+        const arr = selection[type];
+        const idx = arr.indexOf(name);
+        if (idx > -1) { 
+            arr.splice(idx, 1); 
+            btn.classList.remove('active'); 
+        } else {
+            const inputName = document.getElementById('my-name-input').value.trim();
+            const max = (inputName === "") ? 2 : 1;
+            if (type === 'people' && arr.length >= max) return;
+            arr.push(name); 
+            btn.classList.add('active');
+        }
+        if (type === 'people') updatePersonButtonsState();
+        updatePreview();
+    }
+
+    // [핵심] 자동 선택 촤라락 애니메이션 함수
+    async function autoSelectNext() {
+        // 하이라이트된 버튼들 찾기 (3번 섹션과 4번 섹션 모두 포함)
+        const highlightBtns = Array.from(document.querySelectorAll('.next-highlight'));
+        
+        // 이미 active인 버튼은 제외하고 순차적으로 실행
+        for (let i = 0; i < highlightBtns.length; i++) {
+            const btn = highlightBtns[i];
+            const type = btn.parentElement.id.replace('-container', '');
+            const name = btn.dataset.name;
+
+            if (!selection[type].includes(name)) {
+                // 클릭 효과 유발
+                toggleSelection(type, name, btn);
+                // 촤라락 소요 시간 조절 (버튼당 50ms 간격, 약 2~3초 내외 완공)
+                await new Promise(resolve => setTimeout(resolve, 150)); 
+            }
+        }
     }
 
     function applyHighlight() {
@@ -397,7 +389,6 @@
     function updatePersonButtonsState() {
         const inputName = document.getElementById('my-name-input').value.trim();
         const maxLimit = (inputName === "") ? 2 : 1;
-        // 두 개의 컨테이너 모두에서 버튼 상태 업데이트
         document.querySelectorAll('#person-day-container .unit-btn, #person-night-container .unit-btn').forEach(btn => {
             const isFull = selection.people.length >= maxLimit;
             const isSelected = btn.classList.contains('active');
@@ -409,22 +400,17 @@
         if (selectedArray.length === 0) return "-";
         const groups = [];
         const processedIndexes = new Set();
-
         const excludeGroups = ["두루아이"];
         
         selectedArray.forEach((item, index) => {
             if (processedIndexes.has(index)) return;
-            
             const match = item.match(/^(.*)\s(\d+)$/);
             const baseName = match ? match[1] : item;
-
-            // 예외 목록에 포함된 이름이면 그룹화 로직을 건너뜀
             if (excludeGroups.includes(baseName)) {
                 groups.push(item);
                 processedIndexes.add(index);
                 return;
             }
-            
             const sameGroup = [];
             selectedArray.forEach((innerItem, innerIndex) => {
                 const innerMatch = innerItem.match(/^(.*)\s(\d+)$/);
@@ -450,16 +436,11 @@
         const getP = (name) => { 
             const info = personnelData.find(p => p.name === name); 
             const timeStr = info ? info.time : "";
-            
-            if (info && info.id) {
-                return `<span class="slack-mention">@${name}</span><span class="hidden-id"> <@${info.id}> </span><span class="slack-time">${timeStr}</span>`;
-            } else {
-                return `<span class="slack-mention">@${name}</span> <span class="slack-time">${timeStr}</span>`;
-            }
+            if (info && info.id) return `<span class="slack-mention">@${name}</span><span class="hidden-id"> <@${info.id}> </span><span class="slack-time">${timeStr}</span>`;
+            else return `<span class="slack-mention">@${name}</span> <span class="slack-time">${timeStr}</span>`;
         };
 
         let p1 = `<span class="slack-mention">@본인</span>`, p2 = `<span class="slack-mention">@대기자</span>`;
-    
         if (inputName !== "") {
             p1 = getP(inputName);
             if (selection.people[0]) p2 = getP(selection.people[0]);
@@ -467,7 +448,6 @@
             if (selection.people[0]) p1 = getP(selection.people[0]);
             if (selection.people[1]) p2 = getP(selection.people[1]);
         }
-        
 
         let lines = [
             `[${h}시 다중 모니터링 교대]`,
@@ -491,16 +471,23 @@
             lines.push(`• 출차: ${outParts.join(" / ")}`);
         }
     
-        if (selection.account.length > 0) {
-            lines.push(`• 멀티 계정 ${selection.account.join(", ")} 사용 중`);
-        }    
+        if (selection.account.length > 0) lines.push(`• 멀티 계정 ${selection.account.join(", ")} 사용 중`);
         document.getElementById('preview').innerHTML = lines.join('\n');
     }
     
+    function updatePopupPosition(e) {
+        const popup = document.getElementById('note-popup');
+        const padding = 15;
+        const popupWidth = 280;
+        let leftPos = e.pageX + padding;
+        if (leftPos + popupWidth > window.innerWidth) leftPos = e.pageX - popupWidth - padding;
+        popup.style.left = leftPos + 'px';
+        popup.style.top = (e.pageY + padding) + 'px';
+    }
+
     function copyToClipboard() {
         const preview = document.getElementById('preview');
         const textToCopy = preview.innerText;
-
         const textarea = document.createElement('textarea');
         textarea.value = textToCopy;
         document.body.appendChild(textarea); 
@@ -518,42 +505,3 @@
 </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
