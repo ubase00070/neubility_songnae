@@ -303,7 +303,7 @@
             btn.textContent = item.name;
             btn.dataset.name = item.name; 
 
-            if (newUnits.includes(item.name)) {
+            if (item.type !== 'shift' && newUnits.includes(item.name)) {
                 const dot = document.createElement('span');
                 dot.className = 'red-dot';
                 btn.appendChild(dot);
@@ -519,6 +519,7 @@
 </script>
 </body>
 </html>
+
 
 
 
