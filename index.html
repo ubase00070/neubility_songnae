@@ -137,7 +137,7 @@
         </div> 
         <div class="manual-section" style="margin-top:15px; padding:15px; background-color:#fff; border:1px dashed #e9e4d9; border-radius:12px; font-size:13px; line-height:1.6; color:#495057;">
             <div style="font-weight:bold; margin-bottom:8px; color:#222;">[ Notes ]</div>
-            <span> • 본 도구는 '그냥 타이핑하자' vs '수 십초라도 절약하자'라는 미묘한 간극에서 출발한, 'Click Only Semi-Auto' 툴입니다.</span><br>
+            <span> • 본 도구는 'Click Only Semi-Auto' 툴입니다.</span><br>
             <span> • 자동 선택 버튼 클릭 시 [3], [4]의 <b style="color:#34f84f;">예정 기체</b>들이 전부 자동 선택됨.</span><br>
             <span> • <b style="color:#ff00ff;">자체순찰 01, 02, 인력개발원 - 주말 휴무 적용됨.</b></span><br>
             <span> • 기체 특이사항 하단 팝업 및 <b style="color:#ff4d4f;">적색 점멸 표시.</b></span><br>
@@ -384,22 +384,37 @@
     }
 
     function applyHighlight() {
-        let baseH = new Date().getHours();
-        const nextH = String((baseH + 1) % 24).padStart(2, '0');
-        const data = timeTable[nextH];
-        
+    let baseH = new Date().getHours();
+    const nextH = String((baseH + 1) % 24).padStart(2, '0');
+    const data = timeTable[nextH];
+    
         document.querySelectorAll('.next-highlight').forEach(b => b.classList.remove('next-highlight'));
+
         if (data) {
             const formatName = (n) => n.replace("자체순찰", "자체순찰 ").trim();
+
+            // [수정 포인트] 필터링 로직 정의
+            const isDisabled = (name) => {
+                const note = unitNotes[name] || "";
+                return note.includes("보류") || note.includes("고장");
+            };
+
             data.plan.forEach(name => {
                 const target = formatName(name);
-                const btn = document.querySelector(`#plan-container [data-name="${target}"]`);
-                if (btn) btn.classList.add('next-highlight');
+                // 보류나 고장이 아닐 때만 하이라이트 추가
+                if (!isDisabled(target)) { 
+                    const btn = document.querySelector(`#plan-container [data-name="${target}"]`);
+                    if (btn) btn.classList.add('next-highlight');
+                }
             });
+
             data.out.forEach(name => {
                 const target = formatName(name);
-                const btn = document.querySelector(`#out-container [data-name="${target}"]`);
-                if (btn) btn.classList.add('next-highlight');
+                // 보류나 고장이 아닐 때만 하이라이트 추가
+                if (!isDisabled(target)) {
+                    const btn = document.querySelector(`#out-container [data-name="${target}"]`);
+                    if (btn) btn.classList.add('next-highlight');
+                }
             });
         }
     }
@@ -553,6 +568,7 @@
 </script>
 </body>
 </html>
+
 
 
 
