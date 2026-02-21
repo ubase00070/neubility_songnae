@@ -254,7 +254,7 @@
 
         const filterHoliday = (name) => {
             if ((currentDay === 0 || currentDay === 6) && (name.includes("인력개발원") || name.includes("자체순찰"))) return false;
-            if ((currentDay === 2 || currentDay === 3) && name.includes("한성대")) return false;
+            if ((currentDay === 3) && name.includes("한성대")) return false;
             return true;
         };
 
@@ -569,6 +569,7 @@
 </script>
 </body>
 </html>
+
 
 
 
